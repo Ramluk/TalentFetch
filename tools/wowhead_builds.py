@@ -21,10 +21,10 @@ HASH_RE = re.compile(
 )
 PATCH_RE = re.compile(r"Patch\s+(\d+\.\d+\.\d+)", re.I)
 
-# Ordered from specific to general so "mythic+" wins over generic "dungeon".
+# Ordered from specific to general so "mythic+" wins over generic terms.
 CONTENT_RULES = (
     ("mythic+", ("mythic+", "mythic plus", "mythic-plus", "mythic dungeons")),
-    ("raid", ("raid", "single target", "single-target", "st")),
+    ("raid", ("raid", "single target", "single-target")),
     ("delves", ("delve", "delves")),
     ("pvp", ("pvp", "arena", "battleground")),
     ("leveling", ("leveling", "leveling build", "level 80")),
