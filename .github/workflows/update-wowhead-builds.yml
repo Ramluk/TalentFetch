@@ -1,0 +1,39 @@
+name: Update Wowhead Builds
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Discover current Wowhead builds
+        run: python tools/wowhead_builds.py
+
+      - name: Generate addon data
+        run: python tools/generate_build_data.py
+
+      - name: Commit changed build data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/wowhead_builds.json addon/TalentFetch_Data.lua
+          if git diff --cached --quiet; then
+            echo "No build changes detected."
+            exit 0
+          fi
+          git commit -m "chore(data): refresh Wowhead talent builds"
+          git push
