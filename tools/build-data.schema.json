@@ -1,0 +1,15 @@
+{
+  "patch": "12.1.0",
+  "generatedAt": 0,
+  "builds": [
+    {
+      "name": "Fury Mythic+",
+      "specID": 72,
+      "heroSpec": "Slayer",
+      "content": "Mythic+",
+      "priority": 1,
+      "updatedAt": 0,
+      "importString": ""
+    }
+  ]
+}
