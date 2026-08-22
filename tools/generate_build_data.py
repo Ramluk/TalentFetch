@@ -6,6 +6,8 @@ import json
 import time
 from pathlib import Path
 
+from build_import_string import validate_import_string
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "tools" / "wowhead_builds.json"
 OUT = ROOT / "addon" / "TalentFetch_Data.lua"
@@ -13,6 +15,21 @@ OUT = ROOT / "addon" / "TalentFetch_Data.lua"
 
 def lua_string(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
+
+
+def normalize_import_string(build: dict) -> str | None:
+    """Wowhead's Blizzard hash is itself a Blizzard import string.
+
+    Wowhead documents /talent-calc/blizzard/<hash> as using Blizzard's
+    talent serialization. Do not transform or re-encode it; validate the
+    payload and pass it through unchanged.
+    """
+    value = build.get("importString") or build.get("blizzardHash")
+    if not value:
+        return None
+    value = str(value).strip()
+    validate_import_string(value)
+    return value
 
 
 def main() -> None:
@@ -26,7 +43,12 @@ def main() -> None:
     ]
 
     for build in data.get("builds", []):
-        import_string = build.get("importString") or build.get("blizzardHash")
+        try:
+            import_string = normalize_import_string(build)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid Wowhead talent build {build.get('name', '<unnamed>')!r}: {exc}"
+            ) from exc
         if not import_string:
             continue
         lines.extend(
@@ -38,7 +60,7 @@ def main() -> None:
                 f"            role = {lua_string(str(build.get('role') or ''))},",
                 f"            content = {lua_string(str(build.get('content') or 'unknown'))},",
                 f"            sourceUrl = {lua_string(str(build.get('sourceUrl') or ''))},",
-                f"            importString = {lua_string(str(import_string))},",
+                f"            importString = {lua_string(import_string)},",
                 "        },",
             ]
         )
