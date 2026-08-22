@@ -21,7 +21,7 @@ jobs:
           python-version: "3.12"
 
       - name: Discover current Wowhead builds
-        run: python tools/wowhead_builds.py
+        run: python tools/wowhead_builds.py --strict
 
       - name: Generate addon data
         run: python tools/generate_build_data.py
