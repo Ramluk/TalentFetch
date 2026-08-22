@@ -4,7 +4,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "tools"))
 
-from wowhead_builds import classify_content, discover, guide_url
+from wowhead_builds import classify_content, discover, extract_hashes, guide_url
+
+
+FIXTURE = "BgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASCSahAAAAkkAASUIABAAA"
 
 
 class WowheadBuildTests(unittest.TestCase):
@@ -25,29 +28,40 @@ class WowheadBuildTests(unittest.TestCase):
         self.assertEqual(classify_content("Arena talent build"), "pvp")
         self.assertEqual(classify_content("General build"), "unknown")
 
-    def test_discover_extracts_hashes_and_nearby_heading_context(self):
-        html = '''
-        <h2>Best Fury Warrior Raid Talent Build</h2>
-        <a href="/talent-calc/blizzard/ABC123">Single Target (Best)</a>
-        <h2>Best Fury Warrior Mythic+ Talent Build</h2>
-        <a href="https://www.wowhead.com/talent-calc/blizzard/XYZ789">Mythic+ Dungeons (Best)</a>
-        <a href="/talent-calc/blizzard/ABC123">duplicate</a>
-        '''
-        spec = {"class": "warrior", "spec": "fury", "role": "dps", "name": "Fury Warrior"}
-        builds = discover(spec, html)
-        self.assertEqual([b["blizzardHash"] for b in builds], ["ABC123", "XYZ789"])
-        self.assertEqual(builds[0]["content"], "raid")
-        self.assertTrue(builds[0]["recommended"])
-        self.assertEqual(builds[1]["content"], "mythic+")
-        self.assertTrue(builds[1]["recommended"])
+    def test_extract_hashes_only_accepts_explicit_blizzard_urls(self):
+        html = f'<a href="/talent-calc/blizzard/{FIXTURE}">Raid (Best)</a><span>{FIXTURE}</span>'
+        self.assertEqual(extract_hashes(html), [FIXTURE])
 
-    def test_discover_falls_back_to_raw_html_when_links_are_not_anchors(self):
-        html = '<div data-build="/talent-calc/blizzard/FALLBACK123"></div>'
-        spec = {"class": "mage", "spec": "arcane", "role": "dps", "name": "Arcane Mage"}
+    def test_discover_uses_link_label_for_content_and_recommendation(self):
+        html = f'''<h2>Talent Import Codes</h2>
+            <table><tr>
+              <td><a href="/talent-calc/blizzard/{FIXTURE}">Raid (Best)</a></td>
+            </tr></table>'''
+        spec = {"class": "mage", "spec": "arcane", "name": "Arcane Mage", "role": "dps"}
         builds = discover(spec, html)
         self.assertEqual(len(builds), 1)
-        self.assertEqual(builds[0]["blizzardHash"], "FALLBACK123")
-        self.assertEqual(builds[0]["content"], "unknown")
+        self.assertEqual(builds[0]["content"], "raid")
+        self.assertTrue(builds[0]["recommended"])
+        self.assertEqual(builds[0]["importString"], FIXTURE)
+        self.assertGreater(builds[0]["specId"], 0)
+
+    def test_escaped_json_style_urls_are_supported(self):
+        html = f'{{"url":"https:\\/\\/www.wowhead.com\\/talent-calc\\/blizzard\\/{FIXTURE}"}}'
+        spec = {"class": "mage", "spec": "arcane", "name": "Arcane Mage", "role": "dps"}
+        builds = discover(spec, html)
+        self.assertEqual(len(builds), 1)
+        self.assertEqual(builds[0]["importString"], FIXTURE)
+
+    def test_discover_deduplicates_a_build_and_keeps_better_context(self):
+        html = f'''
+          <a href="/talent-calc/blizzard/{FIXTURE}">Build Import Code Link</a>
+          <a href="/talent-calc/blizzard/{FIXTURE}">Raid (Best)</a>
+        '''
+        spec = {"class": "mage", "spec": "arcane", "name": "Arcane Mage", "role": "dps"}
+        builds = discover(spec, html)
+        self.assertEqual(len(builds), 1)
+        self.assertEqual(builds[0]["content"], "raid")
+        self.assertTrue(builds[0]["recommended"])
 
 
 if __name__ == "__main__":
