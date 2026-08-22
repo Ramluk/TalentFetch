@@ -1,13 +1,4 @@
-"""Discover Blizzard-compatible talent hashes from current Wowhead guides.
-
-Wowhead's current class guides expose Blizzard-style talent calculator links.
-The collector intentionally stores the Blizzard hash instead of attempting to
-reimplement Blizzard's talent serialization format.
-
-This is a discovery layer: labels/content classification can be refined as we
-learn more about Wowhead's page structure. A build is never invented when no
-Blizzard hash is present.
-"""
+"""Discover and classify Blizzard-compatible talent builds from Wowhead guides."""
 
 from __future__ import annotations
 
@@ -24,30 +15,83 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "tools" / "spec_registry.json"
 OUTPUT = ROOT / "tools" / "wowhead_builds.json"
 
-HASH_RE = re.compile(r"(?:https?://www\.wowhead\.com)?/??(?:[a-z]{2}/)?talent-calc/blizzard/([A-Za-z0-9+/=_-]+)", re.I)
+HASH_RE = re.compile(
+    r"(?:https?://www\.wowhead\.com)?/?(?:[a-z]{2}/)?talent-calc/blizzard/([A-Za-z0-9+/=_-]+)",
+    re.I,
+)
 PATCH_RE = re.compile(r"Patch\s+(\d+\.\d+\.\d+)", re.I)
+
+# Ordered from specific to general so "mythic+" wins over generic terms.
+CONTENT_RULES = (
+    ("mythic+", ("mythic+", "mythic plus", "mythic-plus", "mythic dungeons")),
+    ("raid", ("raid", "single target", "single-target")),
+    ("delves", ("delve", "delves")),
+    ("pvp", ("pvp", "arena", "battleground")),
+    ("leveling", ("leveling", "leveling build", "level 80")),
+)
+
+
+def normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", text or "").strip()
+
+
+def classify_content(text: str) -> str:
+    haystack = normalize(text).lower()
+    for content, needles in CONTENT_RULES:
+        if any(needle in haystack for needle in needles):
+            return content
+    return "unknown"
+
+
+def clean_build_name(text: str, spec_name: str, content: str) -> str:
+    text = normalize(text)
+    if not text:
+        return f"{spec_name} {content.title()}" if content != "unknown" else f"{spec_name} build"
+    text = re.sub(r"\s*\((?:best|current recommendation)\)\s*", " ", text, flags=re.I)
+    return normalize(text)
 
 
 class LinkParser(HTMLParser):
+    """Capture talent links plus nearby section-heading context."""
+
+    HEADING_TAGS = {"h1", "h2", "h3", "h4", "h5", "h6"}
+
     def __init__(self) -> None:
         super().__init__()
-        self.links: list[tuple[str, str]] = []
+        self.links: list[dict[str, str]] = []
         self._href: str | None = None
         self._text: list[str] = []
+        self._heading: str | None = None
+        self._heading_tag: str | None = None
+        self._heading_text: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag != "a":
-            return
-        self._href = dict(attrs).get("href")
-        self._text = []
+        if tag in self.HEADING_TAGS:
+            self._heading_tag = tag
+            self._heading_text = []
+        if tag == "a":
+            self._href = dict(attrs).get("href")
+            self._text = []
 
     def handle_data(self, data: str) -> None:
         if self._href is not None:
             self._text.append(data)
+        if self._heading_tag is not None:
+            self._heading_text.append(data)
 
     def handle_endtag(self, tag: str) -> None:
+        if tag in self.HEADING_TAGS and self._heading_tag == tag:
+            self._heading = normalize(" ".join(self._heading_text))
+            self._heading_tag = None
+            self._heading_text = []
         if tag == "a" and self._href is not None:
-            self.links.append((self._href, " ".join(self._text).strip()))
+            self.links.append(
+                {
+                    "href": self._href,
+                    "text": normalize(" ".join(self._text)),
+                    "heading": self._heading or "",
+                }
+            )
             self._href = None
             self._text = []
 
@@ -61,7 +105,7 @@ def fetch(url: str) -> str:
     request = Request(
         url,
         headers={
-            "User-Agent": "TalentFetch/0.1 (+https://github.com/Ramluk/TalentFetch)",
+            "User-Agent": "TalentFetch/0.2 (+https://github.com/Ramluk/TalentFetch)",
             "Accept": "text/html,application/xhtml+xml",
         },
     )
@@ -75,49 +119,44 @@ def discover(spec: dict[str, str], html: str) -> list[dict[str, object]]:
     results: list[dict[str, object]] = []
     seen: set[str] = set()
 
-    for href, text in parser.links:
-        match = HASH_RE.search(href)
-        if not match:
-            continue
-        talent_hash = match.group(1)
+    def add_result(talent_hash: str, label: str = "", heading: str = "") -> None:
         if talent_hash in seen:
-            continue
+            return
         seen.add(talent_hash)
+        context = normalize(f"{label} {heading}")
+        content = classify_content(context)
+        recommended = bool(re.search(r"\b(?:best|current recommendation|recommended)\b", context, re.I))
         results.append(
             {
-                "name": text or f"{spec['name']} build",
+                "name": clean_build_name(label or heading, spec["name"], content),
                 "class": spec["class"],
                 "spec": spec["spec"],
                 "role": spec["role"],
-                "content": "unknown",
+                "content": content,
+                "recommended": recommended,
                 "source": "wowhead",
                 "sourceUrl": guide_url(spec),
                 "blizzardHash": talent_hash,
             }
         )
 
-    # Some Wowhead links are rendered as non-anchor data. Keep a fallback
-    # regex pass so a markup change doesn't silently produce zero builds.
+    for link in parser.links:
+        match = HASH_RE.search(link["href"])
+        if match:
+            add_result(match.group(1), link["text"], link["heading"])
+
+    # Some Wowhead builds are rendered in non-anchor data. Keep a fallback
+    # regex pass so markup changes do not silently produce zero builds.
     if not results:
         for match in HASH_RE.finditer(html):
-            talent_hash = match.group(1)
-            if talent_hash in seen:
-                continue
-            seen.add(talent_hash)
-            results.append(
-                {
-                    "name": f"{spec['name']} build",
-                    "class": spec["class"],
-                    "spec": spec["spec"],
-                    "role": spec["role"],
-                    "content": "unknown",
-                    "source": "wowhead",
-                    "sourceUrl": guide_url(spec),
-                    "blizzardHash": talent_hash,
-                }
-            )
+            add_result(match.group(1))
 
     return results
+
+
+def extract_patch(html: str) -> str | None:
+    match = PATCH_RE.search(html)
+    return match.group(1) if match else None
 
 
 def main() -> int:
@@ -133,22 +172,27 @@ def main() -> int:
 
     builds: list[dict[str, object]] = []
     errors: list[dict[str, str]] = []
+    patches: set[str] = set()
     for spec in registry:
         url = guide_url(spec)
         try:
             html = fetch(url)
             builds.extend(discover(spec, html))
-            print(f"{spec['name']}: {sum(1 for b in builds if b['spec'] == spec['spec'] and b['class'] == spec['class'])} builds")
+            patch = extract_patch(html)
+            if patch:
+                patches.add(patch)
+            count = sum(1 for b in builds if b["spec"] == spec["spec"] and b["class"] == spec["class"])
+            print(f"{spec['name']}: {count} builds")
         except (HTTPError, URLError, TimeoutError, ValueError) as exc:
             errors.append({"spec": spec["name"], "url": url, "error": str(exc)})
             print(f"ERROR {spec['name']}: {exc}")
         time.sleep(0.25)
 
     output = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "generatedAt": int(time.time()),
         "source": "wowhead",
-        "patch": None,
+        "patch": sorted(patches)[-1] if patches else None,
         "builds": builds,
         "errors": errors,
     }
