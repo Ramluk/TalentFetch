@@ -29,9 +29,6 @@ HASH_RE = re.compile(
     r"([A-Za-z0-9+/=_-]{20,})",
     re.I,
 )
-# Wowhead guide pages may embed the same Blizzard loadout as a raw import code
-# instead of a /talent-calc/blizzard/ URL. Keep this deliberately broad and
-# let Blizzard serialization validation reject unrelated page strings.
 RAW_IMPORT_RE = re.compile(r"(?<![A-Za-z0-9+/=_-])([A-Za-z0-9+/=_-]{50,140})(?![A-Za-z0-9+/=_-])")
 PATCH_RE = re.compile(r"Patch\s+(\d+\.\d+\.\d+)", re.I)
 CONTENT_RULES = (
@@ -137,7 +134,6 @@ def fetch(url: str) -> str:
 
 
 def extract_hashes(text: str) -> list[str]:
-    """Extract validated Blizzard hashes from calculator URLs."""
     normalized = text.replace("\\/", "/")
     hashes: list[str] = []
     seen: set[str] = set()
@@ -154,7 +150,7 @@ def extract_hashes(text: str) -> list[str]:
 
 
 def extract_raw_imports(text: str) -> list[tuple[str, str]]:
-    """Extract raw Blizzard loadout strings with a nearby semantic context."""
+    """Extract raw Blizzard loadout strings with nearby semantic context."""
     normalized = text.replace("\\/", "/")
     results: list[tuple[str, str]] = []
     seen: set[str] = set()
@@ -167,7 +163,6 @@ def extract_raw_imports(text: str) -> list[tuple[str, str]]:
         except ValueError:
             continue
         seen.add(value)
-        # JSON/HTML surrounding the code usually contains the build label.
         context = normalize(normalized[max(0, match.start() - 700): match.end() + 700])
         results.append((value, context))
     return results
@@ -206,8 +201,6 @@ def discover(spec: dict[str, str], page_html: str) -> list[dict[str, object]]:
         for talent_hash in extract_hashes(link["href"]):
             add_result(talent_hash, link["text"], link["heading"], link["context"])
 
-    # Some current Wowhead guide renderings expose the code as text/JSON rather
-    # than as an anchor. Use nearby page context to classify those codes.
     for talent_hash, context in extract_raw_imports(page_html):
         add_result(talent_hash, "", "", context)
 
@@ -233,6 +226,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--spec", help="Only collect one spec slug, e.g. warrior/fury")
     parser.add_argument("--output", default=str(OUTPUT))
+    parser.add_argument("--strict", action="store_true", help="Fail if any registered spec cannot be collected")
     args = parser.parse_args()
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
     if args.spec:
@@ -241,11 +235,14 @@ def main() -> int:
     builds: list[dict[str, object]] = []
     errors: list[dict[str, str]] = []
     patches: set[str] = set()
+    successful_specs: set[tuple[str, str]] = set()
     for spec in registry:
         url = guide_url(spec)
         try:
             page_html = fetch(url)
             discovered = discover(spec, page_html)
+            if discovered:
+                successful_specs.add((spec["class"], spec["spec"]))
             builds.extend(discovered)
             patch = extract_patch(page_html)
             if patch:
@@ -255,8 +252,17 @@ def main() -> int:
             errors.append({"spec": spec["name"], "url": url, "error": str(exc)})
             print(f"ERROR {spec['name']}: {exc}")
         time.sleep(0.25)
+
     if not builds:
         raise SystemExit("No Blizzard talent hashes were discovered; refusing to publish empty build data.")
+
+    missing = [spec["name"] for spec in registry if (spec["class"], spec["spec"]) not in successful_specs]
+    if args.strict and (errors or missing):
+        details = [f"errors={len(errors)}"]
+        if missing:
+            details.append("missing=" + ", ".join(missing))
+        raise SystemExit("Strict Wowhead refresh failed: " + "; ".join(details))
+
     output = {
         "schemaVersion": 3,
         "generatedAt": int(time.time()),
