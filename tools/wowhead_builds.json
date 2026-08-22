@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787403805,
+  "generatedAt": 1787424702,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -1129,6 +1129,18 @@
       "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/demon-hunter/havoc/talent-builds-pve-dps",
+      "importString": "com/images/wow/icons/small/ability_demonhunter_eyebeam",
+      "specId": 35263
+    },
+    {
+      "name": "Havoc Demon Hunter build",
+      "class": "demon-hunter",
+      "spec": "havoc",
+      "role": "dps",
+      "content": "unknown",
+      "recommended": false,
+      "source": "wowhead",
+      "sourceUrl": "https://www.wowhead.com/guide/classes/demon-hunter/havoc/talent-builds-pve-dps",
       "importString": "com/images/wow/icons/small/ability_demonhunter_specdps",
       "specId": 35263
     },
@@ -1153,7 +1165,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/demon-hunter/havoc/talent-builds-pve-dps",
-      "importString": "CEkAAAAAAAAAAAAAAAAAAAAAAYmZGzMzmxMzMmZmMmZAAAAAAAzyDMmtZYmBzMWmZMDzMGzyALzmZMMbaaMzMG2AAAAAAAAYmBDAAAAD",
+      "importString": "CEkAAAAAAAAAAAAAAAAAAAAAAYmZGzMzmxMzMmZmMmZAAAAAAAzyDMmtZYmBzMWmZMDzMGzyALziZMMbaaMzMG2AAAAAAAAYmBDAAAAD",
       "specId": 18688
     },
     {
@@ -1174,7 +1186,7 @@
       "spec": "havoc",
       "role": "dps",
       "content": "mythic+",
-      "recommended": true,
+      "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/demon-hunter/havoc/talent-builds-pve-dps",
       "importString": "CEkAAAAAAAAAAAAAAAAAAAAAAYGMzMz2MmZmxYmMmZAAAAAAAzixsNDzMz2MzYZmxMMzwMLzsNDGGbbMJjZGzYBAAAAAAAMzAMAAAAM",
@@ -3541,7 +3553,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/marksmanship/talent-builds-pve-dps",
-      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAwCMwMGzYZAMD2AAAAAAAAAzYGzssNjZmxM4BMNjBjtlZmZmZmZmZhZWGMDAAYMzMGAz0GDDwGzsNjB",
+      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAwCMwMGzYZAMD2AAAAAAAAAzYmZmFzYmZMDGTzYwYbZmZmZmZmZWwsMYGAAwYmZMAmptNYA2YmtZMA",
       "specId": 33728
     },
     {
@@ -3553,7 +3565,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/marksmanship/talent-builds-pve-dps",
-      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAwCMwMGzYZAMD2AAAAAAAAAzYGzssNjZmxM4BMNjBz2mZmZmZmZmZhZWGmBAAYMzMGAz0GDDwGzsNjB",
+      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAwCMwMGzYZAMD2AAAAAAAAAzYmZmFzYmZMDGTzYwstZmZmZmZmZWwsMMDAAwYmZMAmptNYA2YmtZMA",
       "specId": 33728
     },
     {
@@ -3565,7 +3577,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/marksmanship/talent-builds-pve-dps",
-      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAwGMwMGzYZAMD2AAAAAAAAAzYmZGbzYmZMDLjpZMYW2WmZmZmZmZmFmZZYGAAAPwYMAMTbgBYjZ2mxA",
+      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAwGMwMGzYZAMD2AAAAAAAAAzYmZGbzYmZMDLjpZMYW22mZmZmZmZmFmZZYGAAAPwYMAMTbgBYjZ2mxA",
       "specId": 33728
     },
     {
@@ -3577,7 +3589,7 @@
       "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/marksmanship/talent-builds-pve-dps",
-      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAYzsMwAmgZYbAzCAAAAAAAAYGzYmltZMzMmBPgpZMYstMzMzMzMzMLMzygBAAYMzMmZmBEGGgNmZbGD",
+      "importString": "C4PAAAAAAAAAAAAAAAAAAAAAAYzsMwAmgZYbAzCAAAAAAAAYGzMzsYGzMjZwYaGDGbLzMzMzMzMzCmlBDAAwYmZMzMDIbwAsxMbzYA",
       "specId": 33728
     },
     {
