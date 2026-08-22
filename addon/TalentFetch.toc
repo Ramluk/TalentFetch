@@ -1,0 +1,11 @@
+## Interface: 120100
+## Title: TalentFetch
+## Notes: Live Wowhead talent builds in-game.
+## Author: TalentFetch
+## Version: 0.1.0
+## SavedVariables: TalentFetchDB
+
+TalentFetch.lua
+TalentFetch_Data.lua
+TalentFetch_Import.lua
+TalentFetch_UI.lua
