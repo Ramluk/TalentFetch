@@ -1,9 +1,8 @@
 """Discover current Blizzard-compatible talent builds from Wowhead guides.
 
-The collector intentionally treats Wowhead as a presentation/source layer. The
-actual talent payload is the Blizzard serialization embedded in a Wowhead
-``/talent-calc/blizzard/<hash>`` URL. We validate that payload separately before
-publishing it to addon data.
+Wowhead publishes current class-guide builds with Blizzard-compatible talent
+payloads. The collector supports both the calculator URL form and the raw
+import-code form that Wowhead embeds in guide HTML/JSON.
 """
 
 from __future__ import annotations
@@ -30,6 +29,10 @@ HASH_RE = re.compile(
     r"([A-Za-z0-9+/=_-]{20,})",
     re.I,
 )
+# Wowhead guide pages may embed the same Blizzard loadout as a raw import code
+# instead of a /talent-calc/blizzard/ URL. Keep this deliberately broad and
+# let Blizzard serialization validation reject unrelated page strings.
+RAW_IMPORT_RE = re.compile(r"(?<![A-Za-z0-9+/=_-])([A-Za-z0-9+/=_-]{50,140})(?![A-Za-z0-9+/=_-])")
 PATCH_RE = re.compile(r"Patch\s+(\d+\.\d+\.\d+)", re.I)
 CONTENT_RULES = (
     ("mythic+", ("mythic+", "mythic plus", "mythic-plus", "mythic dungeons")),
@@ -102,7 +105,12 @@ class LinkParser(HTMLParser):
             self._heading_tag = None
             self._heading_text = []
         if tag == "a" and self._href is not None:
-            self.links.append({"href": html_lib.unescape(self._href), "text": normalize(" ".join(self._text)), "heading": self._heading, "context": normalize(" ".join(self._context_text))})
+            self.links.append({
+                "href": html_lib.unescape(self._href),
+                "text": normalize(" ".join(self._text)),
+                "heading": self._heading,
+                "context": normalize(" ".join(self._context_text)),
+            })
             self._href = None
             self._text = []
         if tag in self.CONTEXT_TAGS and self._context_depth:
@@ -117,12 +125,19 @@ def guide_url(spec: dict[str, str]) -> str:
 
 
 def fetch(url: str) -> str:
-    request = Request(url, headers={"User-Agent": "TalentFetch/0.3 (+https://github.com/Ramluk/TalentFetch)", "Accept": "text/html,application/xhtml+xml"})
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "TalentFetch/0.4 (+https://github.com/Ramluk/TalentFetch)",
+            "Accept": "text/html,application/xhtml+xml",
+        },
+    )
     with urlopen(request, timeout=30) as response:
         return response.read().decode("utf-8", errors="replace")
 
 
 def extract_hashes(text: str) -> list[str]:
+    """Extract validated Blizzard hashes from calculator URLs."""
     normalized = text.replace("\\/", "/")
     hashes: list[str] = []
     seen: set[str] = set()
@@ -136,6 +151,26 @@ def extract_hashes(text: str) -> list[str]:
             seen.add(value)
             hashes.append(value)
     return hashes
+
+
+def extract_raw_imports(text: str) -> list[tuple[str, str]]:
+    """Extract raw Blizzard loadout strings with a nearby semantic context."""
+    normalized = text.replace("\\/", "/")
+    results: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for match in RAW_IMPORT_RE.finditer(normalized):
+        value = match.group(1).rstrip(".,);'\"<")
+        if value in seen:
+            continue
+        try:
+            validate_import_string(value)
+        except ValueError:
+            continue
+        seen.add(value)
+        # JSON/HTML surrounding the code usually contains the build label.
+        context = normalize(normalized[max(0, match.start() - 700): match.end() + 700])
+        results.append((value, context))
+    return results
 
 
 def discover(spec: dict[str, str], page_html: str) -> list[dict[str, object]]:
@@ -154,14 +189,27 @@ def discover(spec: dict[str, str], page_html: str) -> list[dict[str, object]]:
         seen.add(talent_hash)
         semantic_context = normalize(f"{label} {heading} {context}")
         content = classify_content(semantic_context)
-        results.append({"name": clean_build_name(label or heading, spec["name"], content), "class": spec["class"], "spec": spec["spec"], "role": spec["role"], "content": content, "recommended": bool(RECOMMENDED_RE.search(semantic_context)), "source": "wowhead", "sourceUrl": guide_url(spec), "importString": talent_hash, "specId": header.spec_id})
+        results.append({
+            "name": clean_build_name(label or heading, spec["name"], content),
+            "class": spec["class"],
+            "spec": spec["spec"],
+            "role": spec["role"],
+            "content": content,
+            "recommended": bool(RECOMMENDED_RE.search(semantic_context)),
+            "source": "wowhead",
+            "sourceUrl": guide_url(spec),
+            "importString": talent_hash,
+            "specId": header.spec_id,
+        })
 
     for link in parser.links:
         for talent_hash in extract_hashes(link["href"]):
             add_result(talent_hash, link["text"], link["heading"], link["context"])
-    if not results:
-        for talent_hash in extract_hashes(page_html):
-            add_result(talent_hash)
+
+    # Some current Wowhead guide renderings expose the code as text/JSON rather
+    # than as an anchor. Use nearby page context to classify those codes.
+    for talent_hash, context in extract_raw_imports(page_html):
+        add_result(talent_hash, "", "", context)
 
     by_hash: dict[str, dict[str, object]] = {}
     for build in results:
@@ -209,7 +257,14 @@ def main() -> int:
         time.sleep(0.25)
     if not builds:
         raise SystemExit("No Blizzard talent hashes were discovered; refusing to publish empty build data.")
-    output = {"schemaVersion": 3, "generatedAt": int(time.time()), "source": "wowhead", "patch": sorted(patches)[-1] if patches else None, "builds": builds, "errors": errors}
+    output = {
+        "schemaVersion": 3,
+        "generatedAt": int(time.time()),
+        "source": "wowhead",
+        "patch": sorted(patches)[-1] if patches else None,
+        "builds": builds,
+        "errors": errors,
+    }
     Path(args.output).write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return 0
 
