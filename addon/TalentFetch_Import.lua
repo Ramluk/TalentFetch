@@ -5,43 +5,66 @@ TF.Import = Import
 
 local function LoadBlizzardTalentUI()
     if C_AddOns and C_AddOns.LoadAddOn then
-        C_AddOns.LoadAddOn("Blizzard_PlayerSpells")
-        C_AddOns.LoadAddOn("Blizzard_ClassTalentUI")
+        pcall(C_AddOns.LoadAddOn, "Blizzard_PlayerSpells")
+    elseif UIParentLoadAddOn then
+        pcall(UIParentLoadAddOn, "Blizzard_PlayerSpells")
     end
 end
 
-function Import:ImportString(importString, loadoutName)
-    if type(importString) ~= "string" or importString == "" then
-        return false, "Missing talent import string."
-    end
-
+local function GetImportDialog()
     LoadBlizzardTalentUI()
 
-    if ClassTalentImportExportMixin and ClassTalentImportExportMixin.ImportLoadout then
-        local ok, result = ClassTalentImportExportMixin:ImportLoadout(importString, loadoutName)
-        if ok then
-            if ClassTalentLoadoutImportDialog then
-                ClassTalentLoadoutImportDialog:Show()
-            end
-            return true, result
-        end
-        return false, result
+    if not ClassTalentLoadoutImportDialog and UIParentLoadAddOn then
+        pcall(UIParentLoadAddOn, "Blizzard_PlayerSpells")
     end
 
-    return false, "Blizzard talent import API is unavailable."
+    return ClassTalentLoadoutImportDialog
+end
+
+function Import:OpenImportDialog(importString, loadoutName)
+    if type(importString) ~= "string" or importString == "" then
+        return false, "This build does not have a Blizzard import string yet."
+    end
+
+    if InCombatLockdown() then
+        return false, "Talent builds cannot be imported while in combat."
+    end
+
+    local dialog = GetImportDialog()
+    if not dialog or not dialog.ShowDialog then
+        return false, "Blizzard's talent import dialog is unavailable. Open the Talents window first."
+    end
+
+    dialog:ShowDialog()
+
+    local importBox = dialog.ImportControl
+        and dialog.ImportControl.InputContainer
+        and dialog.ImportControl.InputContainer.EditBox
+    local nameBox = dialog.NameControl and dialog.NameControl.EditBox
+
+    if not importBox then
+        return false, "Could not find Blizzard's talent import field."
+    end
+
+    importBox:SetText(importString)
+    if nameBox and loadoutName then
+        nameBox:SetText(loadoutName)
+    end
+
+    return true
 end
 
 function Import:OpenBuild(build)
-    if not build or not build.importString then
-        TF:Print("Build has no import string.")
+    if not build then
+        TF:Print("No build selected.")
         return
     end
 
-    local ok, result = self:ImportString(build.importString, build.name)
+    local ok, err = self:OpenImportDialog(build.importString, build.name)
     if not ok then
-        TF:Print("Import failed: " .. tostring(result))
+        TF:Print("|cffff5555Import unavailable:|r " .. tostring(err))
         return
     end
 
-    TF:Print("Prepared |cffFFFFFF" .. tostring(build.name) .. "|r. Review it in Blizzard's import dialog and apply it there.")
+    TF:Print("Loaded |cffFFFFFF" .. tostring(build.name) .. "|r into Blizzard's import dialog. Review and apply it there.")
 end
