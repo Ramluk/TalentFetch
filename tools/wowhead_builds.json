@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787490273,
+  "generatedAt": 1787511044,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -3217,7 +3217,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/beast-mastery/talent-builds-pve-dps",
-      "importString": "C0PAAAAAAAAAAAAAAAAAAAAAAAMmxwCsAzwQDbAAYGGzsMzwMmZMDzMGzMMzYGzwMzYGzghmBAAAAMDAAAzMzMAzsRYYWAbDAD",
+      "importString": "C0PAAAAAAAAAAAAAAAAAAAAAAAMmxwCsAzwQDbAAYGGzsMzwMmZYYmxYmxMzYGzwMzYGzghmBAAAAMDAAAzMzMAzsRYYWAbDAD",
       "specId": 17344
     },
     {
