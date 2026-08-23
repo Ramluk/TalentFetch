@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787450549,
+  "generatedAt": 1787468665,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -8165,6 +8165,18 @@
       "specId": 35263
     },
     {
+      "name": "Enhancement Shaman Raid",
+      "class": "shaman",
+      "spec": "enhancement",
+      "role": "dps",
+      "content": "raid",
+      "recommended": true,
+      "source": "wowhead",
+      "sourceUrl": "https://www.wowhead.com/guide/classes/shaman/enhancement/talent-builds-pve-dps",
+      "importString": "CcQAAAAAAAAAAAAAAAAAAAAAAMzMzgZmZmZmhZmZAAAAAAAAA2AsZGDLkFYGGawCAzyMmZGLLzAzMbsMzMzwwYGAgZYMzYmJwMDGMGA",
+      "specId": 50176
+    },
+    {
       "name": "Enhancement Shaman Mythic+",
       "class": "shaman",
       "spec": "enhancement",
@@ -8173,7 +8185,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/shaman/enhancement/talent-builds-pve-dps",
-      "importString": "CcQAAAAAAAAAAAAAAAAAAAAAAMzMzgZmZmZmhZmZAAAAAAAAA2AsZGDLkFYGGawCAzyMmZGLLzAzMbsMzMzwwYGAgZYMzYmJwMDGMGA",
+      "importString": "CcQAAAAAAAAAAAAAAAAAAAAAAMzMzgZmZmZmhZmZAAAAAAAAA2AsZGDbkFYGGawCAzyMmZGLLzAzMbsMzMzwwYGAgZYMzYmJwMDGMGA",
       "specId": 50176
     },
     {
@@ -8201,6 +8213,18 @@
       "specId": 50176
     },
     {
+      "name": "Enhancement Shaman Raid",
+      "class": "shaman",
+      "spec": "enhancement",
+      "role": "dps",
+      "content": "raid",
+      "recommended": false,
+      "source": "wowhead",
+      "sourceUrl": "https://www.wowhead.com/guide/classes/shaman/enhancement/talent-builds-pve-dps",
+      "importString": "CcQAAAAAAAAAAAAAAAAAAAAAAMzMzMzMzMzMzMzMzYGAAAAAAAAAsAbwMW0YbAMTwGAzyMmZGLLzAzMbsMzMzwwYGAADwYmJmZAgxA",
+      "specId": 50176
+    },
+    {
       "name": "Enhancement Shaman Mythic+",
       "class": "shaman",
       "spec": "enhancement",
@@ -8209,7 +8233,7 @@
       "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/shaman/enhancement/talent-builds-pve-dps",
-      "importString": "CcQAAAAAAAAAAAAAAAAAAAAAAMzMzMzMzMzMzMzMzYGAAAAAAAAAsAbwMW0YbAMTwGAzyMmZGLLzAzMbsMzMzwwYGAADwYmJmZAgxA",
+      "importString": "CcQAAAAAAAAAAAAAAAAAAAAAAMzMzMzMzMzMzMzMzYGAAAAAAAAAsAbwMW0YbAMTwGAzyMmZGLLzAzMbsMzMzwwYGAAgxYmJmZAgxA",
       "specId": 50176
     },
     {
