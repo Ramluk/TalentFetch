@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787556683,
+  "generatedAt": 1787577391,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -7186,10 +7186,34 @@
       "spec": "assassination",
       "role": "dps",
       "content": "mythic+",
+      "recommended": true,
+      "source": "wowhead",
+      "sourceUrl": "https://www.wowhead.com/guide/classes/rogue/assassination/talent-builds-pve-dps",
+      "importString": "CMQAAAAAAAAAAAAAAAAAAAAAAYmlZmFDAAAAAAzygtZAAAAAAttNzMzMzMGLzMzsNzyMz8AmxMjxMmZMGgNzyADYJYZYCMsAmZAmZ8BA",
+      "specId": 50176
+    },
+    {
+      "name": "Assassination Rogue Mythic+",
+      "class": "rogue",
+      "spec": "assassination",
+      "role": "dps",
+      "content": "mythic+",
       "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/rogue/assassination/talent-builds-pve-dps",
       "importString": "CMQAAAAAAAAAAAAAAAAAAAAAAYmlZmFDAAAAAAzygtZAAAAAAttNzMzMzMGLzMzsNzyMz8AmxMjxwMjxAYgFYGjGzGIbDYDAMzMzYA",
+      "specId": 50176
+    },
+    {
+      "name": "Assassination Rogue Mythic+",
+      "class": "rogue",
+      "spec": "assassination",
+      "role": "dps",
+      "content": "mythic+",
+      "recommended": false,
+      "source": "wowhead",
+      "sourceUrl": "https://www.wowhead.com/guide/classes/rogue/assassination/talent-builds-pve-dps",
+      "importString": "CMQAAAAAAAAAAAAAAAAAAAAAAYmlZmFDAAAAAAzygtZAAAAAAttNzMzMzMGLzMzsNzyMz8AmxMjxMmZMGADsAzY0Y2AZbAbAgZmZGfA",
       "specId": 50176
     },
     {
