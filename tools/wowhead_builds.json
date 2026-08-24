@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787511044,
+  "generatedAt": 1787536794,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -4570,7 +4570,7 @@
       "spec": "frost",
       "role": "dps",
       "content": "unknown",
-      "recommended": true,
+      "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/mage/frost/talent-builds-pve-dps",
       "importString": "com/optimized/guide-header-revamp/images/content/tall-headers/retail/categories/classes-mage-frost",
