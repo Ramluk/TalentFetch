@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787598145,
+  "generatedAt": 1787622919,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -961,7 +961,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/demon-hunter/devourer/talent-builds-pve-dps",
-      "importString": "CgcBAAAAAAAAAAAAAAAAAAAAAAAWMmZmZmZmBmBAAAAAAY7BGz2gZAAAAAAAAYGzw8AzMzMzMzMjZ2mZM202CACYAMmZmtZmpZbmlZmxYGA",
+      "importString": "CgcBAAAAAAAAAAAAAAAAAAAAAAAWMmZmZmZmBmBAAAAAAY7BGz2gZAAAAAAAAYGzwYmZmZmZmZMz2Mjxm2WAQADwDMmZmtZmpZbmlZmxYGA",
       "specId": 1793
     },
     {
@@ -6665,18 +6665,6 @@
       "specId": 35263
     },
     {
-      "name": "Holy Priest build",
-      "class": "priest",
-      "spec": "holy",
-      "role": "healer",
-      "content": "unknown",
-      "recommended": false,
-      "source": "wowhead",
-      "sourceUrl": "https://www.wowhead.com/guide/classes/priest/holy/talent-builds-pve-healer",
-      "importString": "com/images/wow/icons/small/spell_holy_guardianspirit",
-      "specId": 35263
-    },
-    {
       "name": "Holy Priest Mythic+",
       "class": "priest",
       "spec": "holy",
@@ -6694,7 +6682,7 @@
       "spec": "holy",
       "role": "healer",
       "content": "mythic+",
-      "recommended": true,
+      "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/priest/holy/talent-builds-pve-healer",
       "importString": "CEQAAAAAAAAAAAAAAAAAAAAAAwYAAAAAAAMmxsMYMzMDzMDLzMzMAAAAGzsMDmZmBjZGDYmCAMzmZysZAgxgNzM2A0MmZMGmZ2WGgBMA",
@@ -6709,7 +6697,19 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/priest/holy/talent-builds-pve-healer",
-      "importString": "CEQAAAAAAAAAAAAAAAAAAAAAAwYAAAAAAAMzMmlxMjZGDzALzMzMAAAAGzsMDmZmx2MmZAMTBwMLYIMmtBYMwiZmBgmxMjxgZAmZGwA",
+      "importString": "CEQAAAAAAAAAAAAAAAAAAAAAAADAAAAAAYBmZWGzMmZMMDzsMzYGAAAAzYWmBzMzwMMDgZqBwMbYIMmlBYMwiZmZBQzYMGDzMAzMzAD",
+      "specId": 17408
+    },
+    {
+      "name": "Holy Priest Mythic+",
+      "class": "priest",
+      "spec": "holy",
+      "role": "healer",
+      "content": "mythic+",
+      "recommended": true,
+      "source": "wowhead",
+      "sourceUrl": "https://www.wowhead.com/guide/classes/priest/holy/talent-builds-pve-healer",
+      "importString": "CEQAAAAAAAAAAAAAAAAAAAAAAADAAAAAAgZmxsMmZMzYYGYZmZmBAAAwYmlZwMzM2mxMDgZKAmZDDhxsMAjBWMzMLAaGzMGDmBYmZAD",
       "specId": 17408
     },
     {
