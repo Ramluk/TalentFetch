@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787663644,
+  "generatedAt": 1787684402,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -2386,10 +2386,10 @@
       "spec": "restoration",
       "role": "healer",
       "content": "mythic+",
-      "recommended": true,
+      "recommended": false,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/druid/restoration/talent-builds-pve-healer",
-      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAMjxMLzMjZmxsNMYmNjNmBAAAAAAAAAAbDa2YMNzY4BMLzMzMDDzAAAAAAAAAAIAAgZbmlmtZ2sxYmZYmBGNDAwMDADA",
+      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAMMmZZMjZmxsNMMmlZsZbGAAAAAAAAAAsMoZzw0MjZwsYmZmZZGGDAAAAAAAGw2yYBTzMLDAAQALMmZgZ2ANDAmZAADA",
       "specId": 16768
     },
     {
@@ -2401,7 +2401,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/druid/restoration/talent-builds-pve-healer",
-      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAMMmZZMjZmxsN8AMzsMjNbzAAAAAAAAAAglBNbGmmZMDmFzMzMLzwDMDAAAAAAAGAACAAY2mZrZbmFbMmZgZWANDAwMDADA",
+      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAYMmZZmZMzMmthBzsZsNmBAAAAAAAAAAbDa2YMNzY4BMLzMzMDDzAAAAAAAAAAIAAgZbmlmtZ2sxYmZwMwoZAAmZAYA",
       "specId": 16768
     },
     {
