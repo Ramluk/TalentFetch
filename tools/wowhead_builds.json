@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787684402,
+  "generatedAt": 1787709667,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -6214,7 +6214,7 @@
       "spec": "retribution",
       "role": "dps",
       "content": "mythic+",
-      "recommended": false,
+      "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/paladin/retribution/talent-builds-pve-dps",
       "importString": "CYEAAAAAAAAAAAAAAAAAAAAAAAAAAAwoZbbmZWGzMzAAAAAAYmyYGmZsNmthZ2mxYMGmxCbAYWmtZmZrBBAAsAYAwYGGYGzMbAzMDjZMYA",
@@ -6226,7 +6226,7 @@
       "spec": "retribution",
       "role": "dps",
       "content": "mythic+",
-      "recommended": false,
+      "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/paladin/retribution/talent-builds-pve-dps",
       "importString": "CYEAAAAAAAAAAAAAAAAAAAAAAAAAAAwoZbbmZWGjZmBAAAAAYmyYGMjtZmthZ2mxYMzwMWYDAzysNzMbNIAAgFADAYGGYGzYDYmZMjZMYA",
