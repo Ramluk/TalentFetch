@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": 1787824491,
+  "generatedAt": 1787869116,
   "source": "wowhead",
   "patch": "12.1.0",
   "builds": [
@@ -1397,18 +1397,6 @@
       "specId": 18688
     },
     {
-      "name": "Vengeance Demon Hunter Mythic+",
-      "class": "demon-hunter",
-      "spec": "vengeance",
-      "role": "tank",
-      "content": "mythic+",
-      "recommended": false,
-      "source": "wowhead",
-      "sourceUrl": "https://www.wowhead.com/guide/classes/demon-hunter/vengeance/talent-builds-pve-tank",
-      "importString": "CUkAAAAAAAAAAAAAAAAAAAAAAAAYMzMjZmZkZmZYYmZGDzYmxMmxMmxMmZsZmxYAAAAAz2MYYssxEGmZGLAAAAYwAQAmZAGAAAAD",
-      "specId": 18688
-    },
-    {
       "name": "Vengeance Demon Hunter Raid",
       "class": "demon-hunter",
       "spec": "vengeance",
@@ -2377,7 +2365,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/druid/restoration/talent-builds-pve-healer",
-      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAMjxMLzMjZmxsNMYmFjNmBAAAAAAAAAAbDa2YMNzY4BMLzMzMDDzAAAAAAAAAbbjFMNzsMAAABswYmZYmBGNDAmZAADA",
+      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAMjxMLzMjZmxsNMDmFjNmBAAAAAAAAAAbDa2YMNzY4BMLzMzMDDzAAAAAAAAAbbjFMNzsMAAABswYmZYmBGNDAmZAADA",
       "specId": 16768
     },
     {
@@ -2401,7 +2389,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/druid/restoration/talent-builds-pve-healer",
-      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAYMmZZmZMzMmthBzsZsNmBAAAAAAAAAAbDa2YMNzY4BMLzMzMDDzAAAAAAAAAAIAAgZbmlmtZ2sxYmZwMwoZAAmZAYA",
+      "importString": "CkGAAAAAAAAAAAAAAAAAAAAAAYMmZZmZMzMmthhxsZsNmBAAAAAAAAAAbDa2YMNzY4BMLzMzMDDzAAAAAAAAAAIAAgZbmlmtZ2sxYmZwMwoZAAmZAYA",
       "specId": 16768
     },
     {
@@ -3833,27 +3821,15 @@
       "specId": 35263
     },
     {
-      "name": "Survival Hunter Raid",
+      "name": "Survival Hunter Mythic+",
       "class": "hunter",
       "spec": "survival",
       "role": "dps",
-      "content": "raid",
+      "content": "mythic+",
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/survival/talent-builds-pve-dps",
       "importString": "C8PAAAAAAAAAAAAAAAAAAAAAAMgxMGWIbwMM0gFjZmxMWGAAAAAAmZmZmhZMmxMYMNDAAAwAgZssMzMLMzMzYmxAmZDAjxMWMAA",
-      "specId": 50112
-    },
-    {
-      "name": "Survival Hunter Raid",
-      "class": "hunter",
-      "spec": "survival",
-      "role": "dps",
-      "content": "raid",
-      "recommended": true,
-      "source": "wowhead",
-      "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/survival/talent-builds-pve-dps",
-      "importString": "C8PAAAAAAAAAAAAAAAAAAAAAAMWgBmxoxyAYmgNjZmxMWGAAAAAAmZmZmhZMmxMYMNDAAAwAgZssNzMLMzMzYmxAwM2AjxMWMAA",
       "specId": 50112
     },
     {
@@ -3865,7 +3841,7 @@
       "recommended": true,
       "source": "wowhead",
       "sourceUrl": "https://www.wowhead.com/guide/classes/hunter/survival/talent-builds-pve-dps",
-      "importString": "C8PAAAAAAAAAAAAAAAAAAAAAAMWgBmxoxyAYmgtZMzMGzyAAAAAAwMzMmhZMmxMYMNDAAAwAgZmllZmZBzMzYmxAwMWwixwYxAA",
+      "importString": "C8PAAAAAAAAAAAAAAAAAAAAAAMWgBmxoxyAYmgNjZmxwyAAAAAAwMmZmhZMmxMYMNDAAAwAgZstMzMLmZmZGzMzAwMWAjxMWMAA",
       "specId": 50112
     },
     {
