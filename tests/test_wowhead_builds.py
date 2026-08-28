@@ -32,6 +32,10 @@ class WowheadBuildTests(unittest.TestCase):
         html = f'<a href="/talent-calc/blizzard/{FIXTURE}">Raid (Best)</a><span>{FIXTURE}</span>'
         self.assertEqual(extract_hashes(html), [FIXTURE])
 
+    def test_raw_extraction_rejects_unrelated_long_strings(self):
+        html = '<span>com/images/content/tall-headers/retail/categories/classes-warrior-fury</span>'
+        self.assertEqual(discover({"class": "warrior", "spec": "fury", "name": "Fury Warrior", "role": "dps"}, html), [])
+
     def test_discover_uses_link_label_for_content_and_recommendation(self):
         html = f'''<h2>Talent Import Codes</h2>
             <table><tr>

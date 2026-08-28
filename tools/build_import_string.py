@@ -51,6 +51,12 @@ def decode_header(value: str) -> TalentHeader:
     # The first 24 bits contain version + spec ID.
     version = raw[0]
     spec_id = int.from_bytes(raw[1:3], "big")
+    if version < 1 or version > 32:
+        raise ValueError("Unsupported Blizzard talent serialization version")
+    if spec_id < 1 or spec_id > 2000:
+        raise ValueError("Invalid Blizzard talent specialization ID")
+    if len(raw) == 19:
+        raise ValueError("Talent hash has no node payload")
     tree_hash = raw[3:19]
     return TalentHeader(version, spec_id, tree_hash, raw[19:])
 
