@@ -197,6 +197,9 @@ def discover(spec: dict[str, str], page_html: str) -> list[dict[str, object]]:
         for talent_hash in extract_hashes(link["href"]):
             add_result(talent_hash, link["text"], link["heading"], link["context"])
 
+    for talent_hash in extract_hashes(page_html):
+        add_result(talent_hash, context="explicit Wowhead calculator URL")
+
     for talent_hash, context in extract_raw_imports(page_html):
         add_result(talent_hash, "", "", context)
 
