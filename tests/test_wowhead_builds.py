@@ -52,6 +52,7 @@ class WowheadBuildTests(unittest.TestCase):
     def test_escaped_json_style_urls_are_supported(self):
         html = f'{{"url":"https:\\/\\/www.wowhead.com\\/talent-calc\\/blizzard\\/{FIXTURE}"}}'
         spec = {"class": "mage", "spec": "arcane", "name": "Arcane Mage", "role": "dps"}
+        self.assertEqual(extract_hashes(html), [FIXTURE])
         builds = discover(spec, html)
         self.assertEqual(len(builds), 1)
         self.assertEqual(builds[0]["importString"], FIXTURE)

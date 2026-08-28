@@ -24,8 +24,8 @@ REGISTRY = ROOT / "tools" / "spec_registry.json"
 OUTPUT = ROOT / "tools" / "wowhead_builds.json"
 
 HASH_RE = re.compile(
-    r"(?:https?:\\?/\\?/www\\?\.wowhead\\?\.com|https?://www\.wowhead\.com|www\.wowhead\.com)?"
-    r"(?:/|\\?/)(?:[a-z]{2}(?:-[A-Z]{2})?/)?talent-calc/blizzard/"
+    r"(?:https?://(?:www\.)?wowhead\.com)?/"
+    r"(?:[a-z]{2}(?:-[A-Z]{2})?/)?talent-calc/blizzard/"
     r"([A-Za-z0-9+/=_-]{20,})",
     re.I,
 )
