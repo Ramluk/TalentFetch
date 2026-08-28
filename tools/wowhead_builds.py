@@ -134,7 +134,7 @@ def fetch(url: str) -> str:
 
 
 def extract_hashes(text: str) -> list[str]:
-    normalized = text.replace("\\/", "/")
+    normalized = text.replace("\\\\/", "/").replace("\\/", "/")
     hashes: list[str] = []
     seen: set[str] = set()
     for match in HASH_RE.finditer(normalized):
@@ -151,7 +151,7 @@ def extract_hashes(text: str) -> list[str]:
 
 def extract_raw_imports(text: str) -> list[tuple[str, str]]:
     """Extract raw Blizzard loadout strings with nearby semantic context."""
-    normalized = text.replace("\\/", "/")
+    normalized = text.replace("\\\\/", "/").replace("\\/", "/")
     results: list[tuple[str, str]] = []
     seen: set[str] = set()
     for match in RAW_IMPORT_RE.finditer(normalized):
@@ -172,16 +172,12 @@ def discover(spec: dict[str, str], page_html: str) -> list[dict[str, object]]:
     parser = LinkParser()
     parser.feed(page_html)
     results: list[dict[str, object]] = []
-    seen: set[str] = set()
 
     def add_result(talent_hash: str, label: str = "", heading: str = "", context: str = "") -> None:
-        if talent_hash in seen:
-            return
         try:
             header = validate_import_string(talent_hash)
         except ValueError:
             return
-        seen.add(talent_hash)
         semantic_context = normalize(f"{label} {heading} {context}")
         content = classify_content(semantic_context)
         results.append({
