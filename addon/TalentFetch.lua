@@ -119,3 +119,18 @@ SlashCmdList.TALENTFETCH = function()
         TF:Print("UI failed to load. Enable TalentFetch in the AddOns menu and reload.")
     end
 end
+
+SLASH_TALENTFETCHDEBUG1 = "/tfdebug"
+SlashCmdList.TALENTFETCHDEBUG = function()
+    local spec = TF:GetPlayerSpec()
+    local builds = TF:GetBuildsForCurrentSpec()
+    local total = TalentFetchBuildData and #(TalentFetchBuildData.builds or {}) or 0
+    TF:Print(string.format(
+        "spec=%s (%s), matching builds=%d, packaged builds=%d, data=%s",
+        spec and spec.specName or "unknown",
+        spec and spec.classSlug or "unknown",
+        #builds,
+        total,
+        TalentFetchBuildData and TalentFetchBuildData.generatedAt or "missing"
+    ))
+end
