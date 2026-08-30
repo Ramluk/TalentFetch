@@ -47,7 +47,8 @@ function TF:GetBuildsForCurrentSpec()
             and #importString <= 140
             and not string.find(importString, "/", 1, true)
             and not string.find(importString, " ", 1, true)
-        local sameSpec = build.specID and tonumber(build.specID) == tonumber(spec.specID)
+        local buildSpecID = build.specID or build.specId
+        local sameSpec = buildSpecID and tonumber(buildSpecID) == tonumber(spec.specID)
         local sameRegisteredSpec = build.class == spec.classSlug and build.spec == spec.specSlug
         if usableImport and (sameSpec or sameRegisteredSpec) then
             result[#result + 1] = build
