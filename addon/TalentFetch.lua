@@ -22,8 +22,8 @@ function TF:GetPlayerSpec()
     local specIndex = GetSpecialization()
     if not specIndex then return nil end
 
-    local specID, specName, _, specIcon, role, classFile = GetSpecializationInfo(specIndex)
-    local _, playerClassFile = UnitClassBase("player")
+    local specID, specName, _, specIcon, role = GetSpecializationInfo(specIndex)
+    local _, playerClassFile = UnitClass("player")
 
     return {
         specID = specID,
@@ -31,8 +31,8 @@ function TF:GetPlayerSpec()
         specSlug = Slugify(specName),
         specIcon = specIcon,
         role = role,
-        classFile = classFile or playerClassFile,
-        classSlug = CLASS_SLUGS[classFile or playerClassFile] or Slugify(classFile or playerClassFile),
+        classFile = playerClassFile,
+        classSlug = CLASS_SLUGS[playerClassFile] or Slugify(playerClassFile),
     }
 end
 
