@@ -71,12 +71,16 @@ function TF:Print(msg)
 end
 
 local function OnEvent(self, event, ...)
-    if event == "PLAYER_LOGIN" then
+    if event == "ADDON_LOADED" and ... == ADDON_NAME then
+        TF:Print("loaded. Type |cffFFFFFF/tf|r to open builds.")
+    elseif event == "PLAYER_LOGIN" then
         if C_AddOns and C_AddOns.LoadAddOn then
             C_AddOns.LoadAddOn("Blizzard_PlayerSpells")
         end
         TF:InstallTalentTabButton()
-        TF:Print("loaded. Type |cffFFFFFF/tf|r to open builds.")
+        if not TF.TalentTabButton then
+            TF:Print("Talents button unavailable. Type |cffFFFFFF/tf|r to open builds.")
+        end
     elseif event == "ADDON_LOADED" then
         local addonName = ...
         if addonName == "Blizzard_PlayerSpells" then
@@ -110,5 +114,7 @@ SLASH_TALENTFETCH1 = "/tf"
 SlashCmdList.TALENTFETCH = function()
     if TF.UI then
         TF.UI:SetShown(not TF.UI:IsShown())
+    else
+        TF:Print("UI failed to load. Enable TalentFetch in the AddOns menu and reload.")
     end
 end
