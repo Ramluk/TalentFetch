@@ -42,9 +42,14 @@ function TF:GetBuildsForCurrentSpec()
 
     local result = {}
     for _, build in ipairs(TalentFetchBuildData.builds or {}) do
+        local importString = build.importString or ""
+        local usableImport = #importString >= 20
+            and #importString <= 140
+            and not string.find(importString, "/", 1, true)
+            and not string.find(importString, " ", 1, true)
         local sameSpec = build.specID and tonumber(build.specID) == tonumber(spec.specID)
         local sameRegisteredSpec = build.class == spec.classSlug and build.spec == spec.specSlug
-        if sameSpec or sameRegisteredSpec then
+        if usableImport and (sameSpec or sameRegisteredSpec) then
             result[#result + 1] = build
         end
     end
@@ -67,15 +72,38 @@ end
 
 local function OnEvent(self, event, ...)
     if event == "PLAYER_LOGIN" then
+        if C_AddOns and C_AddOns.LoadAddOn then
+            C_AddOns.LoadAddOn("Blizzard_PlayerSpells")
+        end
+        TF:InstallTalentTabButton()
         TF:Print("loaded. Type |cffFFFFFF/tf|r to open builds.")
+    elseif event == "ADDON_LOADED" then
+        local addonName = ...
+        if addonName == "Blizzard_PlayerSpells" then
+            TF:InstallTalentTabButton()
+        end
     elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
         if TF.UI and TF.UI:IsShown() then TF.UI:Refresh() end
     end
 end
 
+function TF:InstallTalentTabButton()
+    if self.TalentTabButton or not PlayerSpellsFrame then return end
+
+    local button = CreateFrame("Button", nil, PlayerSpellsFrame, "UIPanelButtonTemplate")
+    button:SetSize(110, 24)
+    button:SetPoint("TOPRIGHT", PlayerSpellsFrame, "TOPRIGHT", -48, -38)
+    button:SetText("TalentFetch")
+    button:SetScript("OnClick", function()
+        self.UI:SetShown(not self.UI:IsShown())
+    end)
+    self.TalentTabButton = button
+end
+
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+frame:RegisterEvent("ADDON_LOADED")
 frame:SetScript("OnEvent", OnEvent)
 
 SLASH_TALENTFETCH1 = "/tf"
